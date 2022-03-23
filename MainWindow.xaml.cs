@@ -25,14 +25,15 @@ namespace kinoteatr
     /// </summary>
     public partial class MainWindow : Window
     {
+        private SQLiteConnection sqlite;
+   
         public MainWindow()
         {
             InitializeComponent();
         }
-        private SQLiteConnection sqlite;
-        public void dbConnect(String dbLocation)
+        public void dbConnect(string dbLocation)
         {
-            sqlite = new SQLiteConnection(String.Concat("Data Sourse=",dbLocation));
+            sqlite = new SQLiteConnection(String.Concat("Data Source=",dbLocation));
         }
         public DataTable dbSelectQuery(string query)
         {
@@ -47,33 +48,36 @@ namespace kinoteatr
                 cmd.CommandText = query;  //set the passed query
                 ad = new SQLiteDataAdapter(cmd);
                 ad.Fill(dt); //fill the datasource
-                Debug.WriteLine(dt.Columns.Count);
 
             }
             catch (SQLiteException ex)
             {
-                Debug.WriteLine("что-то пошло не так");
+                Debug.WriteLine("что-то пошло не так с базой данных");
             }
             sqlite.Close();
             return dt;
         }
 
         //дата, количество фильмов, название каждого фильма,картинка каждого фильма
-        int[] filmsPerDay = new int[7] { 4, 3, 7, 7, 4, 8, 6 };
+        int[] filmsPerDay = new int[7] { 40, 3, 7, 7, 4, 8, 6 };
         private void mainWindow_Loaded(object sender, RoutedEventArgs e)
         {
+            dbConnect("kino.db");
+            DataTable ans = dbSelectQuery("SELECT Name FROM films");
+
+            filmsPerDay[0] = ans.Rows.Count;
             List<Canvas> canvasList = new List<Canvas>();
             canvasList.Add(canvas1);
             canvasList.Add(canvas2);
             canvasList.Add(canvas3);
-            for (int j = 0; j < canvasList.Count; j++)
+            for (int j = 0; j < 1; j++)
             {
 
                 for (int i = 0; i < filmsPerDay[j]; i++)
                 {
                     Button btn = new Button();
                     btn.FontSize = 14;
-                    btn.Content = "Film" + i.ToString();
+                    btn.Content = ans.Rows[i]["Name"].ToString();
                     btn.Name = "Film" + i.ToString();
                     btn.Width = 100;
                     btn.Height = 100;
@@ -93,12 +97,6 @@ namespace kinoteatr
             Debug.WriteLine($"Routed event handler attached to {senderName}, " +
                 $"triggered by the Click routed event raised by {sourceName}.");
         }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            dbConnect("kino.db");
-            DataTable ans =  dbSelectQuery("SELECT * FROM films");
-
-        }
     }
 }
+
