@@ -10,6 +10,7 @@
         <Canvas x:Name="canvas1" HorizontalAlignment="Center" Height="101" Margin="10,10,10,10" VerticalAlignment="Top" Width="790"/>
         <Canvas x:Name="canvas2" HorizontalAlignment="Center" Height="101" Margin="10,115,10,10" VerticalAlignment="Top" Width="790"/>
         <Canvas x:Name="canvas3" HorizontalAlignment="Center" Height="101" Margin="10,216,10,10" VerticalAlignment="Top" Width="790"/>
+        <Button Content="Button" HorizontalAlignment="Left" Height="67" Margin="685,357,0,0" VerticalAlignment="Top" Width="91" Click="Button_Click"/>
 
     </Grid>
 </Window>
